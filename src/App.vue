@@ -6,6 +6,3 @@ import Navbar from "@/components/navbar/Navbar.vue";
   <Navbar/>
   <router-view/>
 </template>
-
-<style>
-</style>
