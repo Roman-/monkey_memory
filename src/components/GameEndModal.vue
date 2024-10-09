@@ -44,11 +44,7 @@ const message = computed(() => store.state.message)
 const firstButtonText = 'Try again'
 
 const secondButtonText = computed(() => {
-  if (props.win) {
-    return 'Next (' + (store.state.numNumbers + 1) + ' numbers)'
-  } else {
-    return 'Easier (' + (store.state.numNumbers - 1) + ' numbers)'
-  }
+  return props.win ? `Next: ${store.state.numNumbers + 1}` : `Easier: ${store.state.numNumbers - 1}`
 })
 
 const firstButtonDisabled = computed(() => {

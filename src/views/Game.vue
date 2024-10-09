@@ -59,7 +59,7 @@ const closeModal = () => {
   <div class="flex items-start justify-center">
     <div class="flex flex-col items-center my-4">
       <div
-          class="grid gap-3"
+          class="grid gap-2"
           :style="{ gridTemplateColumns: 'repeat(' + store.state.gridNumCols + ', ' + cellSizePx + 'px)' }"
       >
         <div
