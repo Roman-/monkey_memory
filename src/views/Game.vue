@@ -12,6 +12,7 @@ const adjustCellSize = () => {
   const screenMinSize = Math.min(window.innerWidth, window.innerHeight);
   const gridMaxCells = Math.max(gridNumRows, gridNumCols);
   cellSize.value = Math.floor(screenMinSize / gridMaxCells) * 0.8;
+  console.log("cellSize.value", cellSize.value);
 }
 
 onMounted(() => {
@@ -92,18 +93,18 @@ function resetGame() {
 </script>
 
 <template>
-  <div class="flex items-center justify-center min-h-screen">
+  <div class="flex items-start justify-center min-h-screen" @resize="adjustCellSize">
     <div class="flex flex-col items-center">
       <div
-          class="grid gap-2"
+          class="grid gap-3"
           :style="{ gridTemplateColumns: 'repeat(' + gridNumCols + ', ' + cellSize + 'px)' }"
       >
         <div
             v-for="cell in grid"
             :key="cell.id"
             @click="handleCellClick(cell)"
-            class="border border-black flex items-center justify-center cursor-pointer text-xl font-bold"
-            :class="cell.hasNumber ? (cell.isRevealed ? 'bg-white' : 'bg-gray-300') : 'bg-none'"
+            class="flex items-center justify-center cursor-pointer text-xl font-bold rounded"
+            :class="cell.hasNumber ? (cell.isRevealed ? 'bg-white border border-black' : 'bg-gray-300 border border-black') : 'bg-none'"
             :style="{ width: cellSize + 'px', height: cellSize + 'px' }"
         >
           <span v-if="cell.isRevealed && cell.hasNumber">{{ cell.number }}</span>
