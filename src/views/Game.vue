@@ -1,22 +1,19 @@
 <script setup>
-import {ref, reactive, onMounted, onUnmounted} from 'vue';
+import {ref, reactive, onMounted, onUnmounted, computed} from 'vue';
+import {store} from "@/store/store";
 
-const gridNumRows = 8;
-const gridNumCols = 8;
-const numNumbers = 3; // Numbers from 1 to K
-const cellSize = ref(10); // Cell size in pixels
-const totalCells = gridNumRows * gridNumCols
+const cellSizePx = ref(0); // Cell size in pixels
 
 const adjustCellSize = () => {
   const screenMinSize = Math.min(window.innerWidth, window.innerHeight);
-  const gridMaxCells = Math.max(gridNumRows, gridNumCols);
-  cellSize.value = Math.floor(screenMinSize / gridMaxCells) * 0.7;
+  const gridMaxCells = Math.max(store.state.gridNumRows, store.state.gridNumCols);
+  cellSizePx.value = Math.floor(screenMinSize / gridMaxCells) * 0.7;
 }
 
 onMounted(() => {
+  window.addEventListener("resize", adjustCellSize)
   adjustCellSize()
   generateGrid()
-  window.addEventListener("resize", adjustCellSize)
 })
 
 onUnmounted(() => {
@@ -31,7 +28,7 @@ const grid = reactive([]);
 
 function generateGrid() {
   const cells = [];
-  for (let i = 0; i < totalCells; i++) {
+  for (let i = 0; i < store.getters.totalCells; i++) {
     cells.push({
       id: i,
       hasNumber: false,
@@ -40,11 +37,11 @@ function generateGrid() {
     });
   }
 
-  const indices = Array.from({ length: totalCells }, (_, i) => i);
+  const indices = Array.from({ length: store.getters.totalCells }, (_, i) => i);
   shuffleArray(indices);
-  const selectedIndices = indices.slice(0, numNumbers);
+  const selectedIndices = indices.slice(0, store.state.numNumbers);
 
-  for (let i = 0; i < numNumbers; i++) {
+  for (let i = 0; i < store.state.numNumbers; i++) {
     const index = selectedIndices[i];
     cells[index].hasNumber = true;
     cells[index].number = i + 1;
@@ -76,7 +73,7 @@ function handleCellClick(cell) {
       });
     }
     currentNumber.value++;
-    if (currentNumber.value > numNumbers) {
+    if (currentNumber.value > store.state.numNumbers) {
       message.value = 'Congratulations! You completed the game.';
       gameOver.value = true;
     }
@@ -103,7 +100,7 @@ const cellClass = (hasNumber, isRevealed) => {
     <div class="flex flex-col items-center">
       <div
           class="grid gap-3"
-          :style="{ gridTemplateColumns: 'repeat(' + gridNumCols + ', ' + cellSize + 'px)' }"
+          :style="{ gridTemplateColumns: 'repeat(' + store.state.gridNumCols + ', ' + cellSizePx + 'px)' }"
       >
         <div
             v-for="cell in grid"
@@ -111,7 +108,7 @@ const cellClass = (hasNumber, isRevealed) => {
             @click="handleCellClick(cell)"
             class="flex items-center justify-center cursor-pointer text-xl font-bold rounded"
             :class="cellClass(cell.hasNumber, cell.isRevealed)"
-            :style="{ width: cellSize + 'px', height: cellSize + 'px' }"
+            :style="{ width: cellSizePx + 'px', height: cellSizePx + 'px' }"
         >
           <span v-if="cell.isRevealed && cell.hasNumber">{{ cell.number }}</span>
         </div>

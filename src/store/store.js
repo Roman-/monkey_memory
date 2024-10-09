@@ -4,17 +4,19 @@ export const store = createStore({
     strict: true,
     state () {
         return {
-            coins: 9,
+            gridNumRows: 8,
+            gridNumCols: 8,
+            numNumbers: 3
         }
     },
     getters: {
-        twiceCoins (state) {
-            return state.coins * 2
+        totalCells (state) {
+            return state.gridNumCols * state.gridNumRows
         }
     },
     mutations: {
-        setCoins (state, amount) {
-            state.coins = amount
+        setNumNumbers (state, amount) {
+            state.numNumbers = amount
         },
     },
     actions: {
