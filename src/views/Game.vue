@@ -64,8 +64,8 @@ const cellAnimationClass = (cell) => {
 </script>
 
 <template>
-  <div class="flex items-start justify-center min-h-screen">
-    <div class="flex flex-col items-center">
+  <div class="flex items-start justify-center">
+    <div class="flex flex-col items-center my-4">
       <div
           class="grid gap-3"
           :style="{ gridTemplateColumns: 'repeat(' + store.state.gridNumCols + ', ' + cellSizePx + 'px)' }"

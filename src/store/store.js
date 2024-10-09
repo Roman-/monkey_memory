@@ -72,7 +72,8 @@ export const store = createStore({
             commit('setGrid', cells)
         },
         handleCellClick({ state, commit }, cell) {
-            if (state.gameOver || !cell.hasNumber) {
+            if (state.gameOver || !cell.hasNumber || cell.number < state.currentNumber
+                || (state.currentNumber === 1 && cell.number > 1)) {
                 return
             }
 
