@@ -4,8 +4,8 @@ export const store = createStore({
     strict: true,
     state() {
         return {
-            gridNumRows: 8,
-            gridNumCols: 8,
+            gridNumRows: 7,
+            gridNumCols: 7,
             numNumbers: 3,
             currentNumber: 1,
             gameOver: false,

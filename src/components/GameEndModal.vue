@@ -6,7 +6,7 @@
       <div class="modal-action">
         <button
             class="btn"
-            :class="firstButtonClass"
+            :class="props.win ? 'btn-neutral  btn-outline' : 'btn-primary'"
             @click.prevent="firstButtonAction"
             :disabled="firstButtonDisabled"
         >
@@ -14,7 +14,7 @@
         </button>
         <button
             class="btn"
-            :class="secondButtonClass"
+            :class="props.win ? 'btn-primary' : 'btn-neutral btn-outline'"
             @click.prevent="secondButtonAction"
             :disabled="secondButtonDisabled"
         >
@@ -51,9 +51,6 @@ const secondButtonText = computed(() => {
     return 'Easier (' + (store.state.numNumbers - 1) + ' numbers)'
   }
 })
-
-const firstButtonClass = computed(() => (props.win ? 'btn-neutral' : 'btn-primary'))
-const secondButtonClass = computed(() => (props.win ? 'btn-primary' : 'btn-neutral'))
 
 const firstButtonDisabled = computed(() => {
   if (props.win) {

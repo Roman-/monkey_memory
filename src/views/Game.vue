@@ -33,8 +33,7 @@ const handleCellClick = (cell, event) => {
     return
   }
   store.dispatch('handleCellClick', cell)
-  if (cell.number === store.state.numNumbers && !store.state.gameOver) {
-    // Last correct cell clicked
+  if (cell.number === store.state.numNumbers && store.state.gameOver && cell.number <= store.state.currentNumber) {
     party.confetti(event.target)
   }
 }
@@ -43,8 +42,10 @@ watch(
     () => store.state.gameOver,
     (newVal) => {
       if (newVal) {
-        gameOverModalOpen.value = true
-        win.value = store.state.currentNumber > store.state.numNumbers
+        setTimeout(() => {
+          win.value = store.state.currentNumber > store.state.numNumbers
+          gameOverModalOpen.value = true
+        }, win.value ? 700 : 1500)
       }
     }
 )
@@ -72,7 +73,6 @@ const closeModal = () => {
           <span v-if="cell.isRevealed && cell.hasNumber">{{ cell.number }}</span>
         </div>
       </div>
-      <button class="btn btn-primary mt-4" @click="store.dispatch('resetGame')">Reset Game</button>
       <GameEndModal
           :open="gameOverModalOpen"
           :win="win"
