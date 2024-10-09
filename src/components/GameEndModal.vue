@@ -7,9 +7,8 @@
         <button
             class="btn btn-neutral btn-outline"
             @click.prevent="firstButtonAction"
-            :disabled="firstButtonDisabled"
         >
-          {{ firstButtonText }}
+          {{ props.win ? `Try ${store.state.numNumbers} again` : `Easier: ${store.state.numNumbers - 1}` }}
         </button>
         <button
             class="btn btn-primary"
@@ -17,7 +16,7 @@
             :disabled="secondButtonDisabled"
             autofocus
         >
-          {{ secondButtonText }}
+          {{ props.win ? `Next: ${store.state.numNumbers + 1}` : `Try ${store.state.numNumbers} again` }}
         </button>
       </div>
     </form>
@@ -41,17 +40,6 @@ const modal = ref(null)
 const title = computed(() => (props.win ? 'Congratulations!' : 'Game Over'))
 const message = computed(() => store.state.message)
 
-const firstButtonText = 'Try again'
-
-const secondButtonText = computed(() => {
-  return props.win ? `Next: ${store.state.numNumbers + 1}` : `Easier: ${store.state.numNumbers - 1}`
-})
-
-const firstButtonDisabled = computed(() => {
-  // "Try again" button is always enabled
-  return false
-})
-
 const secondButtonDisabled = computed(() => {
   if (props.win) {
     return store.state.numNumbers >= store.getters.totalCells
@@ -60,26 +48,23 @@ const secondButtonDisabled = computed(() => {
   }
 })
 
-  const firstButtonAction = () => {
-    // Try again with current number
-    store.dispatch('resetGame')
-    closeModal()
+const firstButtonAction = () => {
+  if (!props.win) {
+    store.commit('setNumNumbers', store.state.numNumbers - 1)
   }
+  store.dispatch('resetGame')
+  closeModal()
+}
 
   const secondButtonAction = () => {
     if (props.win) {
-      // Advance the number of numbers
       if (store.state.numNumbers < store.getters.totalCells) {
         store.commit('setNumNumbers', store.state.numNumbers + 1)
-        store.dispatch('resetGame')
-      }
-    } else {
-      // Try with fewer numbers
-      if (store.state.numNumbers > 1) {
-        store.commit('setNumNumbers', store.state.numNumbers - 1)
-        store.dispatch('resetGame')
+      } else {
+        // todo increase grid size, update size
       }
     }
+    store.dispatch('resetGame')
     closeModal()
   }
 

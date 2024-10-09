@@ -66,18 +66,14 @@ const closeModal = () => {
             v-for="cell in store.state.grid"
             :key="cell.id"
             @click="handleCellClick(cell, $event)"
-            class="flex items-center justify-center text-xl font-bold rounded select-none"
+            class="flex items-center justify-center text-2xl font-bold rounded select-none"
             :class="[cellBgClass(cell), cellAnimationClass(cell), cellVisibilityClass(cell)]"
             :style="{ width: cellSizePx + 'px', height: cellSizePx + 'px' }"
         >
           <span v-if="cell.isRevealed && cell.hasNumber">{{ cell.number }}</span>
         </div>
       </div>
-      <GameEndModal
-          :open="gameOverModalOpen"
-          :win="win"
-          @close="closeModal"
-      />
+      <GameEndModal :open="gameOverModalOpen" :win="win" @close="closeModal"/>
     </div>
   </div>
 </template>
@@ -91,14 +87,14 @@ const cellBgClass = (cell) => {
   } else if (cell.isRevealed && cell.hasNumber) {
     return 'bg-primary-content'
   } else if (cell.hasNumber) {
-    return 'bg-neutral-300'
+    return 'bg-primary-content'
   } else {
     return ''
   }
 }
 
 const cellVisibilityClass = (cell) => {
-  return cell.hasNumber ? 'border border-black cursor-pointer' : ''
+  return cell.hasNumber ? 'border border-base-content cursor-pointer' : ''
 }
 
 const cellAnimationClass = (cell) => {
