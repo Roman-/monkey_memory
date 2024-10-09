@@ -1,97 +1,61 @@
 <script setup>
-import {ref, reactive, onMounted, onUnmounted, computed} from 'vue';
-import {store} from "@/store/store";
+import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { useStore } from 'vuex'
+import 'animate.css'
 
-const cellSizePx = ref(0); // Cell size in pixels
+const store = useStore()
+
+const cellSizePx = ref(0) // Cell size in pixels
 
 const adjustCellSize = () => {
-  const screenMinSize = Math.min(window.innerWidth, window.innerHeight);
-  const gridMaxCells = Math.max(store.state.gridNumRows, store.state.gridNumCols);
-  cellSizePx.value = Math.floor(screenMinSize / gridMaxCells) * 0.7;
+  const screenMinSize = Math.min(window.innerWidth, window.innerHeight)
+  const gridMaxCells = Math.max(store.state.gridNumRows, store.state.gridNumCols)
+  cellSizePx.value = Math.floor((screenMinSize / gridMaxCells) * 0.7)
 }
 
 onMounted(() => {
-  window.addEventListener("resize", adjustCellSize)
+  window.addEventListener('resize', adjustCellSize)
   adjustCellSize()
-  generateGrid()
+  store.dispatch('generateGrid')
 })
 
 onUnmounted(() => {
-  window.removeEventListener("resize", adjustCellSize)
+  window.removeEventListener('resize', adjustCellSize)
 })
 
-const currentNumber = ref(1);
-const gameOver = ref(false);
-const message = ref('');
+const grid = computed(() => store.state.grid)
+const message = computed(() => store.state.message)
 
-const grid = reactive([]);
-
-function generateGrid() {
-  const cells = [];
-  for (let i = 0; i < store.getters.totalCells; i++) {
-    cells.push({
-      id: i,
-      hasNumber: false,
-      number: null,
-      isRevealed: false,
-    });
-  }
-
-  const indices = Array.from({ length: store.getters.totalCells }, (_, i) => i);
-  shuffleArray(indices);
-  const selectedIndices = indices.slice(0, store.state.numNumbers);
-
-  for (let i = 0; i < store.state.numNumbers; i++) {
-    const index = selectedIndices[i];
-    cells[index].hasNumber = true;
-    cells[index].number = i + 1;
-    cells[index].isRevealed = true;
-  }
-
-  grid.splice(0, grid.length, ...cells);
+const handleCellClick = (cell) => {
+  store.dispatch('handleCellClick', cell)
 }
 
-function shuffleArray(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
+const resetGame = () => {
+  store.dispatch('resetGame')
 }
 
-function handleCellClick(cell) {
-  if (gameOver.value || !cell.hasNumber) {
-    return;
-  }
-
-  if (cell.number === currentNumber.value) {
-    cell.isRevealed = true;
-    if (currentNumber.value === 1) {
-      grid.forEach((c) => {
-        if (c.number !== 1) {
-          c.isRevealed = false;
-        }
-      });
-    }
-    currentNumber.value++;
-    if (currentNumber.value > store.state.numNumbers) {
-      message.value = 'Congratulations! You completed the game.';
-      gameOver.value = true;
-    }
+const cellClass = (cell) => {
+  if (cell.isError) {
+    return 'bg-error text-error-content border border-black'
+  } else if (cell.isCorrect) {
+    return 'bg-success text-success-content border border-black'
+  } else if (cell.isRevealed && cell.hasNumber) {
+    return 'bg-primary-content border border-black'
+  } else if (cell.hasNumber) {
+    return 'bg-neutral-300 border border-black'
   } else {
-    message.value = `Wrong cell! You should click on number ${currentNumber.value}.`;
-    gameOver.value = true;
+    return ''
   }
 }
 
-function resetGame() {
-  currentNumber.value = 1;
-  message.value = '';
-  gameOver.value = false;
-  generateGrid();
-}
-
-const cellClass = (hasNumber, isRevealed) => {
-  return hasNumber ? (isRevealed ? 'bg-white border border-black' : 'bg-gray-300 border border-black') : 'bg-none'
+const cellAnimationClass = (cell) => {
+  if (cell.isError) {
+    return 'animate__animated animate__headShake'
+  } else if (cell.isCorrect) {
+    return 'animate__animated animate__flip animate__faster'
+  } else {
+    return ''
+  }
 }
 </script>
 
@@ -106,14 +70,14 @@ const cellClass = (hasNumber, isRevealed) => {
             v-for="cell in grid"
             :key="cell.id"
             @click="handleCellClick(cell)"
-            class="flex items-center justify-center cursor-pointer text-xl font-bold rounded"
-            :class="cellClass(cell.hasNumber, cell.isRevealed)"
+            class="flex items-center justify-center cursor-pointer text-xl font-bold rounded select-none"
+            :class="[cellClass(cell), cellAnimationClass(cell)]"
             :style="{ width: cellSizePx + 'px', height: cellSizePx + 'px' }"
         >
           <span v-if="cell.isRevealed && cell.hasNumber">{{ cell.number }}</span>
         </div>
       </div>
-      <p v-if="message" class="mt-2">{{ message }}</p>
+      <p v-if="message" class="mt-2 animate__animated animate__fadeIn">{{ message }}</p>
       <button class="btn btn-primary mt-4" @click="resetGame">Reset Game</button>
     </div>
   </div>
