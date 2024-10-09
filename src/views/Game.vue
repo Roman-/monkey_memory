@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, onMounted } from 'vue';
+import {ref, reactive, onMounted, onUnmounted} from 'vue';
 
 const gridNumRows = 8;
 const gridNumCols = 8;
@@ -8,16 +8,19 @@ const cellSize = ref(10); // Cell size in pixels
 const totalCells = gridNumRows * gridNumCols
 
 const adjustCellSize = () => {
-  // set cellSize depending on monitor size so that the grid fits in the display perfectly
   const screenMinSize = Math.min(window.innerWidth, window.innerHeight);
   const gridMaxCells = Math.max(gridNumRows, gridNumCols);
-  cellSize.value = Math.floor(screenMinSize / gridMaxCells) * 0.8;
-  console.log("cellSize.value", cellSize.value);
+  cellSize.value = Math.floor(screenMinSize / gridMaxCells) * 0.7;
 }
 
 onMounted(() => {
   adjustCellSize()
   generateGrid()
+  window.addEventListener("resize", adjustCellSize)
+})
+
+onUnmounted(() => {
+  window.removeEventListener("resize", adjustCellSize)
 })
 
 const currentNumber = ref(1);
@@ -90,10 +93,13 @@ function resetGame() {
   generateGrid();
 }
 
+const cellClass = (hasNumber, isRevealed) => {
+  return hasNumber ? (isRevealed ? 'bg-white border border-black' : 'bg-gray-300 border border-black') : 'bg-none'
+}
 </script>
 
 <template>
-  <div class="flex items-start justify-center min-h-screen" @resize="adjustCellSize">
+  <div class="flex items-start justify-center min-h-screen">
     <div class="flex flex-col items-center">
       <div
           class="grid gap-3"
@@ -104,7 +110,7 @@ function resetGame() {
             :key="cell.id"
             @click="handleCellClick(cell)"
             class="flex items-center justify-center cursor-pointer text-xl font-bold rounded"
-            :class="cell.hasNumber ? (cell.isRevealed ? 'bg-white border border-black' : 'bg-gray-300 border border-black') : 'bg-none'"
+            :class="cellClass(cell.hasNumber, cell.isRevealed)"
             :style="{ width: cellSize + 'px', height: cellSize + 'px' }"
         >
           <span v-if="cell.isRevealed && cell.hasNumber">{{ cell.number }}</span>
