@@ -4,8 +4,12 @@ import { ref, reactive, onMounted } from 'vue';
 const N = 4; // Number of rows
 const M = 4; // Number of columns
 const K = 3; // Numbers from 1 to K
-
 const totalCells = N * M;
+
+// Game state
+const currentNumber = ref(1);
+const gameOver = ref(false);
+const message = ref('');
 
 // Initialize the grid
 const grid = reactive([]);
@@ -45,11 +49,6 @@ function shuffleArray(array) {
     [array[i], array[j]] = [array[j], array[i]];
   }
 }
-
-// Game state
-const currentNumber = ref(1);
-const gameOver = ref(false);
-const message = ref('');
 
 // On component mounted
 onMounted(() => {
@@ -96,15 +95,12 @@ function resetGame() {
 </script>
 
 <template>
-  <div>
+  <div class="flex flex-col">
     <h2>Monkey Memory Game</h2>
     <p v-if="message">{{ message }}</p>
     <div
-        :style="{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(' + M + ', 60px)',
-        gridGap: '5px',
-      }"
+        class="grid gap-2"
+        :style="{ gridTemplateColumns: 'repeat(' + M + ', 60px)', }"
     >
       <div
           v-for="cell in grid"
@@ -126,6 +122,8 @@ function resetGame() {
         <span v-if="cell.isRevealed && cell.hasNumber">{{ cell.number }}</span>
       </div>
     </div>
-    <button @click="resetGame" style="margin-top: 20px;">Reset Game</button>
+    <div>
+      <button class="btn btn-primary m-2" @click="resetGame">Reset Game</button>
+    </div>
   </div>
 </template>
