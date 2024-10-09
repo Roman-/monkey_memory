@@ -1,8 +1,9 @@
 <script setup>
-import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import 'animate.css'
-import party from "party-js";
+import party from 'party-js'
+import GameEndModal from "@/components/GameEndModal.vue";
 
 const store = useStore()
 
@@ -24,14 +25,64 @@ onUnmounted(() => {
   window.removeEventListener('resize', adjustCellSize)
 })
 
-const handleCellClick = (cell) => {
+const gameOverModalOpen = ref(false)
+const win = ref(false)
+
+const handleCellClick = (cell, event) => {
+  if (store.state.gameOver || !cell.hasNumber) {
+    return
+  }
   store.dispatch('handleCellClick', cell)
+  if (cell.number === store.state.numNumbers && !store.state.gameOver) {
+    // Last correct cell clicked
+    party.confetti(event.target)
+  }
 }
 
-const resetGame = () => {
-  store.dispatch('resetGame')
-}
+watch(
+    () => store.state.gameOver,
+    (newVal) => {
+      if (newVal) {
+        gameOverModalOpen.value = true
+        win.value = store.state.currentNumber > store.state.numNumbers
+      }
+    }
+)
 
+const closeModal = () => {
+  gameOverModalOpen.value = false
+}
+</script>
+
+<template>
+  <div class="flex items-start justify-center">
+    <div class="flex flex-col items-center my-4">
+      <div
+          class="grid gap-3"
+          :style="{ gridTemplateColumns: 'repeat(' + store.state.gridNumCols + ', ' + cellSizePx + 'px)' }"
+      >
+        <div
+            v-for="cell in store.state.grid"
+            :key="cell.id"
+            @click="handleCellClick(cell, $event)"
+            class="flex items-center justify-center text-xl font-bold rounded select-none"
+            :class="[cellBgClass(cell), cellAnimationClass(cell), cellVisibilityClass(cell)]"
+            :style="{ width: cellSizePx + 'px', height: cellSizePx + 'px' }"
+        >
+          <span v-if="cell.isRevealed && cell.hasNumber">{{ cell.number }}</span>
+        </div>
+      </div>
+      <button class="btn btn-primary mt-4" @click="store.dispatch('resetGame')">Reset Game</button>
+      <GameEndModal
+          :open="gameOverModalOpen"
+          :win="win"
+          @close="closeModal"
+      />
+    </div>
+  </div>
+</template>
+
+<script>
 const cellBgClass = (cell) => {
   if (cell.isError) {
     return 'bg-error text-error-content'
@@ -60,26 +111,3 @@ const cellAnimationClass = (cell) => {
   }
 }
 </script>
-
-<template>
-  <div class="flex items-start justify-center">
-    <div class="flex flex-col items-center my-4">
-      <div
-          class="grid gap-3"
-          :style="{ gridTemplateColumns: 'repeat(' + store.state.gridNumCols + ', ' + cellSizePx + 'px)' }"
-      >
-        <div
-            v-for="cell in store.state.grid"
-            :key="cell.id"
-            @click="handleCellClick(cell)"
-            class="flex items-center justify-center text-xl font-bold rounded select-none"
-            :class="[cellBgClass(cell), cellAnimationClass(cell), cellVisibilityClass(cell)]"
-            :style="{ width: cellSizePx + 'px', height: cellSizePx + 'px' }"
-        >
-          <span v-if="cell.isRevealed && cell.hasNumber">{{ cell.number }}</span>
-        </div>
-      </div>
-      <button class="btn btn-primary mt-4" @click="resetGame">Reset Game</button>
-    </div>
-  </div>
-</template>
