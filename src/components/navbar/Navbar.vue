@@ -2,7 +2,6 @@
 
 import {useRouter} from "vue-router";
 import ThemeController from "@/components/navbar/ThemeController.vue";
-import LangDropdown from "@/components/navbar/LangDropdown.vue";
 
 const router = useRouter();
 
@@ -11,10 +10,10 @@ const router = useRouter();
 <template>
   <div class="navbar bg-base-100">
     <div class="flex-1">
-      <a class="btn btn-ghost text-xl" @click="router.push('/')">__VUE_TEMPLATE__</a>
+      <a class="btn btn-ghost text-xl" @click="router.push('/')">Monkey memory</a>
     </div>
     <div class="flex-none">
-      <LangDropdown/>
+<!--      <LangDropdown/>-->
       <ThemeController/>
     </div>
   </div>
