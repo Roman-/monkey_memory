@@ -2,6 +2,7 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useStore } from 'vuex'
 import 'animate.css'
+import party from "party-js";
 
 const store = useStore()
 
@@ -22,9 +23,6 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('resize', adjustCellSize)
 })
-
-const grid = computed(() => store.state.grid)
-const message = computed(() => store.state.message)
 
 const handleCellClick = (cell) => {
   store.dispatch('handleCellClick', cell)
@@ -71,7 +69,7 @@ const cellAnimationClass = (cell) => {
           :style="{ gridTemplateColumns: 'repeat(' + store.state.gridNumCols + ', ' + cellSizePx + 'px)' }"
       >
         <div
-            v-for="cell in grid"
+            v-for="cell in store.state.grid"
             :key="cell.id"
             @click="handleCellClick(cell)"
             class="flex items-center justify-center text-xl font-bold rounded select-none"
@@ -81,7 +79,6 @@ const cellAnimationClass = (cell) => {
           <span v-if="cell.isRevealed && cell.hasNumber">{{ cell.number }}</span>
         </div>
       </div>
-      <p v-if="message" class="mt-2 animate__animated animate__fadeIn">{{ message }}</p>
       <button class="btn btn-primary mt-4" @click="resetGame">Reset Game</button>
     </div>
   </div>
