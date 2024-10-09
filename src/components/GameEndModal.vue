@@ -2,7 +2,7 @@
   <dialog ref="modal" class="modal">
     <form method="dialog" class="modal-box">
       <h3 class="text-lg font-bold">{{ title }}</h3>
-      <p class="py-4">{{ message }}</p>
+<!--      picture here-->
       <div class="modal-action">
         <button
             class="btn btn-neutral btn-outline"
@@ -37,8 +37,7 @@ const emit = defineEmits(['close'])
 const store = useStore()
 const modal = ref(null)
 
-const title = computed(() => (props.win ? 'Congratulations!' : 'Game Over'))
-const message = computed(() => store.state.message)
+const title = computed(() => (props.win ? 'Congratulations!' : `You've got ${store.state.currentNumber - 1} correct`))
 
 const secondButtonDisabled = computed(() => {
   if (props.win) {

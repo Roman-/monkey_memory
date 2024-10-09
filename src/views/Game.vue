@@ -6,7 +6,6 @@ import party from 'party-js'
 import GameEndModal from "@/components/GameEndModal.vue";
 
 const store = useStore()
-
 const cellSizePx = ref(0) // Cell size in pixels
 
 const adjustCellSize = () => {
@@ -23,6 +22,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   window.removeEventListener('resize', adjustCellSize)
+  store.dispatch('resetGame')
 })
 
 const gameOverModalOpen = ref(false)
@@ -85,9 +85,9 @@ const cellBgClass = (cell) => {
   } else if (cell.isCorrect) {
     return 'bg-success text-success-content'
   } else if (cell.isRevealed && cell.hasNumber) {
-    return 'bg-primary-content'
+    return 'bg-primary text-primary-content'
   } else if (cell.hasNumber) {
-    return 'bg-primary-content'
+    return 'bg-primary text-primary-content'
   } else {
     return ''
   }
