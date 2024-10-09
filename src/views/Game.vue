@@ -34,18 +34,22 @@ const resetGame = () => {
   store.dispatch('resetGame')
 }
 
-const cellClass = (cell) => {
+const cellBgClass = (cell) => {
   if (cell.isError) {
-    return 'bg-error text-error-content border border-black'
+    return 'bg-error text-error-content'
   } else if (cell.isCorrect) {
-    return 'bg-success text-success-content border border-black'
+    return 'bg-success text-success-content'
   } else if (cell.isRevealed && cell.hasNumber) {
-    return 'bg-primary-content border border-black'
+    return 'bg-primary-content'
   } else if (cell.hasNumber) {
-    return 'bg-neutral-300 border border-black'
+    return 'bg-neutral-300'
   } else {
     return ''
   }
+}
+
+const cellVisibilityClass = (cell) => {
+  return cell.hasNumber ? 'border border-black cursor-pointer' : ''
 }
 
 const cellAnimationClass = (cell) => {
@@ -70,8 +74,8 @@ const cellAnimationClass = (cell) => {
             v-for="cell in grid"
             :key="cell.id"
             @click="handleCellClick(cell)"
-            class="flex items-center justify-center cursor-pointer text-xl font-bold rounded select-none"
-            :class="[cellClass(cell), cellAnimationClass(cell)]"
+            class="flex items-center justify-center text-xl font-bold rounded select-none"
+            :class="[cellBgClass(cell), cellAnimationClass(cell), cellVisibilityClass(cell)]"
             :style="{ width: cellSizePx + 'px', height: cellSizePx + 'px' }"
         >
           <span v-if="cell.isRevealed && cell.hasNumber">{{ cell.number }}</span>
