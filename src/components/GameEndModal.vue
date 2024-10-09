@@ -5,18 +5,17 @@
       <p class="py-4">{{ message }}</p>
       <div class="modal-action">
         <button
-            class="btn"
-            :class="props.win ? 'btn-neutral  btn-outline' : 'btn-primary'"
+            class="btn btn-neutral btn-outline"
             @click.prevent="firstButtonAction"
             :disabled="firstButtonDisabled"
         >
           {{ firstButtonText }}
         </button>
         <button
-            class="btn"
-            :class="props.win ? 'btn-primary' : 'btn-neutral btn-outline'"
+            class="btn btn-primary"
             @click.prevent="secondButtonAction"
             :disabled="secondButtonDisabled"
+            autofocus
         >
           {{ secondButtonText }}
         </button>
@@ -53,57 +52,54 @@ const secondButtonText = computed(() => {
 })
 
 const firstButtonDisabled = computed(() => {
-  if (props.win) {
-    return false
-  } else {
-    return store.state.numNumbers <= 1
-  }
+  // "Try again" button is always enabled
+  return false
 })
 
 const secondButtonDisabled = computed(() => {
   if (props.win) {
     return store.state.numNumbers >= store.getters.totalCells
   } else {
-    return false
+    return store.state.numNumbers <= 1
   }
 })
 
-const firstButtonAction = () => {
-  // Try again with current number
-  store.dispatch('resetGame')
-  closeModal()
-}
-
-const secondButtonAction = () => {
-  if (props.win) {
-    // Advance the number of numbers
-    if (store.state.numNumbers < store.getters.totalCells) {
-      store.commit('setNumNumbers', store.state.numNumbers + 1)
-      store.dispatch('resetGame')
-    }
-  } else {
-    // Try with less numbers
-    if (store.state.numNumbers > 1) {
-      store.commit('setNumNumbers', store.state.numNumbers - 1)
-      store.dispatch('resetGame')
-    }
+  const firstButtonAction = () => {
+    // Try again with current number
+    store.dispatch('resetGame')
+    closeModal()
   }
-  closeModal()
-}
 
-const closeModal = () => {
-  modal.value.close()
-  emit('close')
-}
-
-watch(
-    () => props.open,
-    (newVal) => {
-      if (newVal) {
-        modal.value.showModal()
-      } else {
-        modal.value.close()
+  const secondButtonAction = () => {
+    if (props.win) {
+      // Advance the number of numbers
+      if (store.state.numNumbers < store.getters.totalCells) {
+        store.commit('setNumNumbers', store.state.numNumbers + 1)
+        store.dispatch('resetGame')
+      }
+    } else {
+      // Try with fewer numbers
+      if (store.state.numNumbers > 1) {
+        store.commit('setNumNumbers', store.state.numNumbers - 1)
+        store.dispatch('resetGame')
       }
     }
-)
+    closeModal()
+  }
+
+  const closeModal = () => {
+    modal.value.close()
+    emit('close')
+  }
+
+  watch(
+      () => props.open,
+      (newVal) => {
+        if (newVal) {
+          modal.value.showModal()
+        } else {
+          modal.value.close()
+        }
+      }
+  )
 </script>
