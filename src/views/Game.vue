@@ -1,20 +1,30 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue';
 
-const N = 4; // Number of rows
-const M = 4; // Number of columns
-const K = 3; // Numbers from 1 to K
-const totalCells = N * M;
+const gridNumRows = 8;
+const gridNumCols = 8;
+const numNumbers = 3; // Numbers from 1 to K
+const cellSize = ref(10); // Cell size in pixels
+const totalCells = gridNumRows * gridNumCols
 
-// Game state
+const adjustCellSize = () => {
+  // set cellSize depending on monitor size so that the grid fits in the display perfectly
+  const screenMinSize = Math.min(window.innerWidth, window.innerHeight);
+  const gridMaxCells = Math.max(gridNumRows, gridNumCols);
+  cellSize.value = Math.floor(screenMinSize / gridMaxCells) * 0.8;
+}
+
+onMounted(() => {
+  adjustCellSize()
+  generateGrid()
+})
+
 const currentNumber = ref(1);
 const gameOver = ref(false);
 const message = ref('');
 
-// Initialize the grid
 const grid = reactive([]);
 
-// Function to generate the grid
 function generateGrid() {
   const cells = [];
   for (let i = 0; i < totalCells; i++) {
@@ -26,46 +36,35 @@ function generateGrid() {
     });
   }
 
-  // Randomly select K cells to assign numbers 1..K
   const indices = Array.from({ length: totalCells }, (_, i) => i);
   shuffleArray(indices);
-  const selectedIndices = indices.slice(0, K);
+  const selectedIndices = indices.slice(0, numNumbers);
 
-  for (let i = 0; i < K; i++) {
+  for (let i = 0; i < numNumbers; i++) {
     const index = selectedIndices[i];
     cells[index].hasNumber = true;
     cells[index].number = i + 1;
-    cells[index].isRevealed = true; // Initially, numbers are shown
+    cells[index].isRevealed = true;
   }
 
   grid.splice(0, grid.length, ...cells);
 }
 
-// Utility function to shuffle an array
 function shuffleArray(array) {
-  // Fisher-Yates shuffle algorithm
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
   }
 }
 
-// On component mounted
-onMounted(() => {
-  generateGrid();
-});
-
-// Function to handle cell click
 function handleCellClick(cell) {
   if (gameOver.value || !cell.hasNumber) {
     return;
   }
 
   if (cell.number === currentNumber.value) {
-    // Correct cell clicked
     cell.isRevealed = true;
     if (currentNumber.value === 1) {
-      // When 1 is clicked, mask all other numbers
       grid.forEach((c) => {
         if (c.number !== 1) {
           c.isRevealed = false;
@@ -73,57 +72,45 @@ function handleCellClick(cell) {
       });
     }
     currentNumber.value++;
-    if (currentNumber.value > K) {
-      // Game over, player won
+    if (currentNumber.value > numNumbers) {
       message.value = 'Congratulations! You completed the game.';
       gameOver.value = true;
     }
   } else {
-    // Wrong cell clicked
     message.value = `Wrong cell! You should click on number ${currentNumber.value}.`;
     gameOver.value = true;
   }
 }
 
-// Function to reset the game
 function resetGame() {
   currentNumber.value = 1;
   message.value = '';
   gameOver.value = false;
   generateGrid();
 }
+
 </script>
 
 <template>
-  <div class="flex flex-col">
-    <h2>Monkey Memory Game</h2>
-    <p v-if="message">{{ message }}</p>
-    <div
-        class="grid gap-2"
-        :style="{ gridTemplateColumns: 'repeat(' + M + ', 60px)', }"
-    >
+  <div class="flex items-center justify-center min-h-screen">
+    <div class="flex flex-col items-center">
       <div
-          v-for="cell in grid"
-          :key="cell.id"
-          @click="handleCellClick(cell)"
-          :style="{
-          width: '60px',
-          height: '60px',
-          border: '1px solid black',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          cursor: 'pointer',
-          backgroundColor: cell.isRevealed ? '#fff' : '#ccc',
-          fontSize: '20px',
-          fontWeight: 'bold',
-        }"
+          class="grid gap-2"
+          :style="{ gridTemplateColumns: 'repeat(' + gridNumCols + ', ' + cellSize + 'px)' }"
       >
-        <span v-if="cell.isRevealed && cell.hasNumber">{{ cell.number }}</span>
+        <div
+            v-for="cell in grid"
+            :key="cell.id"
+            @click="handleCellClick(cell)"
+            class="border border-black flex items-center justify-center cursor-pointer text-xl font-bold"
+            :class="cell.hasNumber ? (cell.isRevealed ? 'bg-white' : 'bg-gray-300') : 'bg-none'"
+            :style="{ width: cellSize + 'px', height: cellSize + 'px' }"
+        >
+          <span v-if="cell.isRevealed && cell.hasNumber">{{ cell.number }}</span>
+        </div>
       </div>
-    </div>
-    <div>
-      <button class="btn btn-primary m-2" @click="resetGame">Reset Game</button>
+      <p v-if="message" class="mt-2">{{ message }}</p>
+      <button class="btn btn-primary mt-4" @click="resetGame">Reset Game</button>
     </div>
   </div>
 </template>
