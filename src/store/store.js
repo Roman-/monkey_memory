@@ -6,8 +6,8 @@ export const store = createStore({
     state() {
         return {
             showHint: true,
-            gridNumRows: 6,
-            gridNumCols: 6,
+            gridNumRows: 7,
+            gridNumCols: 5,
             numNumbers: 3,
             currentNumber: 1,
             gameOver: false,
