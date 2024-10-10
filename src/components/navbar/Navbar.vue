@@ -2,7 +2,7 @@
 
 import {useRouter} from "vue-router";
 import ThemeController from "@/components/navbar/ThemeController.vue";
-import {store} from "../../store/store";
+import {store} from "@/store/store";
 
 const router = useRouter();
 

@@ -9,9 +9,8 @@ const store = useStore()
 const cellSizePx = ref(0) // Cell size in pixels
 
 const adjustCellSize = () => {
-  const screenMinSize = Math.min(window.innerWidth, window.innerHeight)
-  const gridMaxCells = Math.max(store.state.gridNumRows, store.state.gridNumCols)
-  cellSizePx.value = Math.floor((screenMinSize / gridMaxCells) * 0.7)
+  // todo: 40 is hardcoded
+  cellSizePx.value = Math.floor(Math.min(window.innerWidth / store.state.gridNumCols, (window.innerHeight - 40) / store.state.gridNumRows) * 0.9)
 }
 
 onMounted(() => {
@@ -59,7 +58,7 @@ const closeModal = () => {
   <div class="flex items-start justify-center">
     <div class="flex flex-col items-center my-4">
       <div
-          class="grid gap-4"
+          class="grid gap-2 m-0 p-0"
           :style="{ gridTemplateColumns: 'repeat(' + store.state.gridNumCols + ', ' + cellSizePx + 'px)' }"
       >
         <div
