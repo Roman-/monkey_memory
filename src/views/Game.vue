@@ -65,8 +65,9 @@ const closeModal = () => {
         <div
             v-for="cell in store.state.grid"
             :key="cell.id"
-            @mousedown.prevent="handleCellClick(cell, $event)"
-            class="flex items-center justify-center text-2xl font-bold rounded select-none"
+            @touchstart.prevent.stop="handleCellClick(cell, $event)"
+            @mousedown.prevent.stop="handleCellClick(cell, $event)"
+            class="flex items-center justify-center text-4xl font-bold rounded select-none"
             :class="[cellBgClass(cell), cellAnimationClass(cell), cellVisibilityClass(cell)]"
             :style="{ width: cellSizePx + 'px', height: cellSizePx + 'px' }"
         >

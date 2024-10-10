@@ -1,3 +1,65 @@
+<script setup>
+import { computed, ref, watch } from 'vue'
+import { useStore } from 'vuex'
+import {randomElement} from "@/js/helpers";
+
+const props = defineProps({
+  open: Boolean,
+  win: Boolean,
+})
+
+const emit = defineEmits(['close'])
+
+const store = useStore()
+const modal = ref(null)
+
+const congratulations = ["Congratulations!", "You've got it!", "Good job!", "Well done!", "Keep going!", "You're doing great!", "Great job!", "Excellent!", "You rock!", "Awesome!", "Impressive!", "Fantastic!", "Superb!", "Splendid!"]
+const congratulationMessage = ref("")
+const title = computed(() => (props.win ? congratulationMessage : `You've got ${store.state.currentNumber - 1} correct`))
+
+const secondButtonDisabled = computed(() => {
+  if (props.win) {
+    return store.state.numNumbers >= store.getters.totalCells
+  } else {
+    return store.state.numNumbers <= 1
+  }
+})
+
+const firstButtonAction = () => {
+  if (!props.win) {
+    store.commit('setNumNumbers', store.state.numNumbers - 1)
+  }
+  store.dispatch('resetGame')
+  closeModal()
+}
+
+const secondButtonAction = () => {
+  if (props.win) {
+    if (store.state.numNumbers < store.getters.totalCells) {
+      store.commit('setNumNumbers', store.state.numNumbers + 1)
+    } else {
+      // todo increase grid size, update size
+    }
+  }
+  store.dispatch('resetGame')
+  closeModal()
+}
+
+const closeModal = () => {
+  modal.value.close()
+  emit('close')
+}
+
+watch(() => props.open, (newVal) => {
+  if (newVal) {
+    congratulationMessage.value = randomElement(congratulations)
+    modal.value.showModal()
+  } else {
+    modal.value.close()
+  }
+})
+</script>
+
 <template>
   <dialog ref="modal" class="modal">
     <form method="dialog" class="modal-box">
@@ -22,64 +84,3 @@
     </form>
   </dialog>
 </template>
-
-<script setup>
-import { computed, ref, watch } from 'vue'
-import { useStore } from 'vuex'
-
-const props = defineProps({
-  open: Boolean,
-  win: Boolean,
-})
-
-const emit = defineEmits(['close'])
-
-const store = useStore()
-const modal = ref(null)
-
-const title = computed(() => (props.win ? 'Congratulations!' : `You've got ${store.state.currentNumber - 1} correct`))
-
-const secondButtonDisabled = computed(() => {
-  if (props.win) {
-    return store.state.numNumbers >= store.getters.totalCells
-  } else {
-    return store.state.numNumbers <= 1
-  }
-})
-
-const firstButtonAction = () => {
-  if (!props.win) {
-    store.commit('setNumNumbers', store.state.numNumbers - 1)
-  }
-  store.dispatch('resetGame')
-  closeModal()
-}
-
-  const secondButtonAction = () => {
-    if (props.win) {
-      if (store.state.numNumbers < store.getters.totalCells) {
-        store.commit('setNumNumbers', store.state.numNumbers + 1)
-      } else {
-        // todo increase grid size, update size
-      }
-    }
-    store.dispatch('resetGame')
-    closeModal()
-  }
-
-  const closeModal = () => {
-    modal.value.close()
-    emit('close')
-  }
-
-  watch(
-      () => props.open,
-      (newVal) => {
-        if (newVal) {
-          modal.value.showModal()
-        } else {
-          modal.value.close()
-        }
-      }
-  )
-</script>

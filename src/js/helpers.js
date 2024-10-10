@@ -18,7 +18,7 @@ export const downloadPlainText = (text, fileName) => {
 }
 
 // shuffles array in place
-function shuffle(a) {
+export const shuffle = (a) => {
     let j, x, i;
     for (i = a.length - 1; i > 0; i--) {
         j = Math.floor(Math.random() * (i + 1));
@@ -27,6 +27,10 @@ function shuffle(a) {
         a[j] = x;
     }
     return a;
+}
+
+export const randomElement = (array) => {
+    return array[Math.floor(Math.random() * array.length)];
 }
 
 // converts file size in bytes to human-readable string

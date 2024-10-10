@@ -1,4 +1,5 @@
 import { createStore } from 'vuex'
+import {shuffle} from "@/js/helpers";
 
 export const store = createStore({
     strict: true,
@@ -59,8 +60,7 @@ export const store = createStore({
             }
 
             const indices = Array.from({ length: getters.totalCells }, (_, i) => i)
-            shuffleArray(indices)
-            const selectedIndices = indices.slice(0, state.numNumbers)
+            const selectedIndices = shuffle(indices).slice(0, state.numNumbers)
 
             for (let i = 0; i < state.numNumbers; i++) {
                 const index = selectedIndices[i]
@@ -130,10 +130,3 @@ export const store = createStore({
         },
     },
 })
-
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1))
-        ;[array[i], array[j]] = [array[j], array[i]]
-    }
-}
