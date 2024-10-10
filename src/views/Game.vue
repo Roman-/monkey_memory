@@ -67,7 +67,7 @@ const closeModal = () => {
             :key="cell.id"
             @touchstart.prevent.stop="handleCellClick(cell, $event)"
             @mousedown.prevent.stop="handleCellClick(cell, $event)"
-            class="flex items-center justify-center text-4xl font-bold rounded select-none"
+            class="flex items-center justify-center text-5xl font-bold rounded select-none"
             :class="[cellBgClass(cell), cellAnimationClass(cell), cellVisibilityClass(cell)]"
             :style="{ width: cellSizePx + 'px', height: cellSizePx + 'px' }"
         >
@@ -95,7 +95,7 @@ const cellBgClass = (cell) => {
 }
 
 const cellVisibilityClass = (cell) => {
-  return cell.hasNumber ? 'border cursor-pointer shadow-md' : ''
+  return cell.hasNumber ? 'border cursor-pointer shadow-md' : 'border'
 }
 
 const cellAnimationClass = (cell) => {
