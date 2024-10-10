@@ -5,6 +5,7 @@ export const store = createStore({
     strict: true,
     state() {
         return {
+            showHint: true,
             gridNumRows: 6,
             gridNumCols: 6,
             numNumbers: 3,
@@ -25,6 +26,7 @@ export const store = createStore({
         },
         setCurrentNumber(state, number) {
             state.currentNumber = number
+            state.showHint = false
         },
         setGameOver(state, value) {
             state.gameOver = value
@@ -72,12 +74,10 @@ export const store = createStore({
             commit('setGrid', cells)
         },
         handleCellClick({ state, commit }, cell) {
-            if (
-                state.gameOver ||
+            if (state.gameOver ||
                 !cell.hasNumber ||
                 cell.number < state.currentNumber ||
-                (state.currentNumber === 1 && cell.number > 1)
-            ) {
+                (state.currentNumber === 1 && cell.number > 1)) {
                 return
             }
 

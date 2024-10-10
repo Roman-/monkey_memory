@@ -45,7 +45,7 @@ watch(
         setTimeout(() => {
           win.value = store.state.currentNumber > store.state.numNumbers
           gameOverModalOpen.value = true
-        }, win.value ? 700 : 1500)
+        }, win.value ? 700 : 1200)
       }
     }
 )
