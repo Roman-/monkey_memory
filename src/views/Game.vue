@@ -65,7 +65,7 @@ const closeModal = () => {
         <div
             v-for="cell in store.state.grid"
             :key="cell.id"
-            @click="handleCellClick(cell, $event)"
+            @mousedown.prevent="handleCellClick(cell, $event)"
             class="flex items-center justify-center text-2xl font-bold rounded select-none"
             :class="[cellBgClass(cell), cellAnimationClass(cell), cellVisibilityClass(cell)]"
             :style="{ width: cellSizePx + 'px', height: cellSizePx + 'px' }"
@@ -83,7 +83,7 @@ const cellBgClass = (cell) => {
   if (cell.isError) {
     return 'bg-error text-error-content'
   } else if (cell.isCorrect) {
-    return 'bg-success text-success-content'
+    return 'bg-success text-success-content border border-success-content'
   } else if (cell.isRevealed && cell.hasNumber) {
     return 'bg-primary text-primary-content'
   } else if (cell.hasNumber) {
@@ -94,7 +94,7 @@ const cellBgClass = (cell) => {
 }
 
 const cellVisibilityClass = (cell) => {
-  return cell.hasNumber ? 'border border-base-content cursor-pointer' : ''
+  return cell.hasNumber ? 'border cursor-pointer shadow-md' : ''
 }
 
 const cellAnimationClass = (cell) => {
