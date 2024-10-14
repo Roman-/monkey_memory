@@ -27,7 +27,7 @@ const secondButtonDisabled = computed(() => {
 
 const firstButtonAction = () => {
   if (!props.win) {
-    store.commit('setNumNumbers', store.state.settings.numNumbers - 1)
+    store.commit('changeSettings', { key: 'numNumbers', value: store.state.settings.numNumbers - 1 })
   }
   store.dispatch('resetGame')
   closeModal()
@@ -36,7 +36,7 @@ const firstButtonAction = () => {
 const secondButtonAction = () => {
   if (props.win) {
     if (store.state.settings.numNumbers < store.getters.totalCells) {
-      store.commit('setNumNumbers', store.state.settings.numNumbers + 1)
+      store.commit('changeSettings', { key: 'numNumbers', value: store.state.settings.numNumbers + 1 })
     } else {
       // todo increase grid size, update size
     }

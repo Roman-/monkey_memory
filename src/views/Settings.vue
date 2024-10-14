@@ -52,34 +52,6 @@ const goToGame = () => {
         </label>
       </div>
 
-      <!-- Grid Number of Rows -->
-      <div class="form-control mb-4">
-        <label class="label">
-          <span class="label-text">Grid Rows</span>
-        </label>
-        <input
-            type="number"
-            min="1"
-            :value="store.state.settings.gridNumRows"
-            @input="changeSetting('gridNumRows', parseInt($event.target.value))"
-            class="input input-bordered w-full"
-        />
-      </div>
-
-      <!-- Grid Number of Columns -->
-      <div class="form-control mb-4">
-        <label class="label">
-          <span class="label-text">Grid Columns</span>
-        </label>
-        <input
-            type="number"
-            min="1"
-            :value="store.state.settings.gridNumCols"
-            @input="changeSetting('gridNumCols', parseInt($event.target.value))"
-            class="input input-bordered w-full"
-        />
-      </div>
-
       <!-- Font Size -->
       <div class="form-control mb-4">
         <label class="label">
