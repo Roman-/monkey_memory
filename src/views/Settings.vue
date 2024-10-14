@@ -20,7 +20,7 @@ const goToGame = () => {
       <!-- Numbers to Memorize -->
       <div class="form-control mb-4">
         <label class="label">
-        <span class="label-text">Numbers to Memorize:
+        <span class="label-text">Difficulty (amount of numbers):
           <span class="font-bold">{{ store.state.settings.numNumbers }}</span>
         </span>
         </label>
@@ -39,14 +39,14 @@ const goToGame = () => {
         </div>
       </div>
 
-      <!-- Suggest Increase Difficulty -->
+      <!-- Fix Difficulty -->
       <div class="form-control mb-4">
         <label class="label cursor-pointer">
-          <span class="label-text">Suggest Increasing Difficulty</span>
+          <span class="label-text">Fixed difficulty</span>
           <input
               type="checkbox"
-              :checked="store.state.settings.suggestIncreaseDifficulty"
-              @change="changeSetting('suggestIncreaseDifficulty', $event.target.checked)"
+              :checked="store.state.settings.fixedDifficulty"
+              @change="changeSetting('fixedDifficulty', $event.target.checked)"
               class="toggle toggle-primary"
           />
         </label>

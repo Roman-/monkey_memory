@@ -77,8 +77,22 @@ watch(() => props.open, (newVal) => {
           class="w-full my-2 animate__animated animate__fadeIn animate__faster"
       />
 
+      <!-- single button-->
+      <div v-if="store.state.settings.fixedDifficulty">
+        <div class="modal-action">
+          <button
+              class="btn btn-primary"
+              @click.prevent="resetGameAndClose"
+              :disabled="secondButtonDisabled"
+              autofocus
+          >
+            Play again
+          </button>
+        </div>
+      </div>
+
       <!-- two buttons-->
-      <div v-if="store.state.settings.suggestIncreaseDifficulty">
+      <div v-else>
         <div class="modal-action">
           <button
               class="btn btn-neutral btn-outline"
@@ -93,20 +107,6 @@ watch(() => props.open, (newVal) => {
               autofocus
           >
             {{ props.win ? `Next: ${store.state.settings.numNumbers + 1}` : `Try ${store.state.settings.numNumbers} again` }}
-          </button>
-        </div>
-      </div>
-
-      <!-- single button-->
-      <div v-else>
-        <div class="modal-action">
-          <button
-              class="btn btn-primary"
-              @click.prevent="resetGameAndClose"
-              :disabled="secondButtonDisabled"
-              autofocus
-          >
-            Play again
           </button>
         </div>
       </div>

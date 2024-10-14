@@ -1,6 +1,6 @@
 export const defaultSettings = {
     difficulty: 3,
-    suggestIncreaseDifficulty: true,
+    fixedDifficulty: false,
     gridNumRows: 6,
     gridNumCols: 5,
     numNumbers: 3,
