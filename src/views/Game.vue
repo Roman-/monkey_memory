@@ -32,7 +32,7 @@ const handleCellClick = (cell, event) => {
     return
   }
   store.dispatch('handleCellClick', cell)
-  if (cell.number === store.state.game.numNumbers && store.state.game.gameOver && cell.number <= store.state.game.currentNumber) {
+  if (cell.number === store.state.settings.numNumbers && store.state.game.gameOver && cell.number <= store.state.game.currentNumber) {
     party.confetti(event.target)
   }
 }
