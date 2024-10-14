@@ -54,10 +54,7 @@ watch(() => props.open, (newVal) => {
   if (newVal) {
     congratulationMessage.value = randomElement(congratulations)
     modal.value.showModal()
-    console.log("open: showGifPictures",
-        store.state.settings.showGifPictures, "src = ", store.state.game.winImage.src);
   } else {
-    console.log("close: store.state.settings.showGifPictures", store.state.settings.showGifPictures);
     modal.value.close()
   }
 })

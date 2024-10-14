@@ -1,6 +1,6 @@
 import {shuffle} from "@/js/helpers";
 
-export const numWinPics = 12; // from 1 to 12
+export const numWinPics = 13;
 
 const winPictureUrl = (index) => `img/game-over/win${index}.webp`
 

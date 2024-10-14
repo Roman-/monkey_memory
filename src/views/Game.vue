@@ -53,35 +53,6 @@ watch(
 const closeModal = () => {
   gameOverModalOpen.value = false
 }
-</script>
-
-<template>
-  <div class="flex items-start justify-center">
-    <div class="flex flex-col items-center my-4">
-      <div
-          class="grid gap-2 m-0 p-0"
-          :style="{ gridTemplateColumns: 'repeat(' + store.state.settings.gridNumCols + ', ' + cellSizePx + 'px)' }"
-      >
-        <div
-            v-for="cell in store.state.game.grid"
-            :key="cell.id"
-            @touchstart.prevent.stop="handleCellClick(cell, $event)"
-            @mousedown.prevent.stop="handleCellClick(cell, $event)"
-            class="flex items-center justify-center text-5xl font-bold rounded select-none"
-            :class="[cellBgClass(cell), cellAnimationClass(cell), cellVisibilityClass(cell)]"
-            :style="{ width: cellSizePx + 'px', height: cellSizePx + 'px' }"
-        >
-          <span v-if="cell.isRevealed && cell.hasNumber">{{ cell.number }}</span>
-        </div>
-      </div>
-      <GameEndModal :open="gameOverModalOpen" :win="win" @close="closeModal"/>
-    </div>
-  </div>
-</template>
-
-<script>
-import {store} from "@/store/store";
-import {computed} from "vue";
 
 const cellBgClass = (cell) => {
   if (cell.isError) {
@@ -111,3 +82,27 @@ const cellAnimationClass = (cell) => {
   }
 }
 </script>
+
+<template>
+  <div class="flex items-start justify-center">
+    <div class="flex flex-col items-center my-4">
+      <div
+          class="grid gap-2 m-0 p-0"
+          :style="{ gridTemplateColumns: 'repeat(' + store.state.settings.gridNumCols + ', ' + cellSizePx + 'px)' }"
+      >
+        <div
+            v-for="cell in store.state.game.grid"
+            :key="cell.id"
+            @touchstart.prevent.stop="handleCellClick(cell, $event)"
+            @mousedown.prevent.stop="handleCellClick(cell, $event)"
+            class="flex items-center justify-center text-5xl font-bold rounded select-none"
+            :class="[cellBgClass(cell), cellAnimationClass(cell), cellVisibilityClass(cell)]"
+            :style="{ width: cellSizePx + 'px', height: cellSizePx + 'px' }"
+        >
+          <span v-if="cell.isRevealed && cell.hasNumber">{{ cell.number }}</span>
+        </div>
+      </div>
+      <GameEndModal :open="gameOverModalOpen" :win="win" @close="closeModal"/>
+    </div>
+  </div>
+</template>
