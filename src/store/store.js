@@ -2,15 +2,6 @@ import { createStore } from 'vuex'
 import { shuffle } from "@/js/helpers";
 import {gameSettingsKey, getInitialSettings} from "@/js/gameSettings";
 
-// Plugin to watch for changes in settings and save to localStorage
-export const settingsPlugin = store => {
-    store.watch(
-        state => state.settings,
-        newVal => localStorage.setItem(gameSettingsKey, JSON.stringify(newVal)),
-        { deep: true }
-    );
-};
-
 export const store = createStore({
     strict: true,
     state() {
@@ -32,18 +23,14 @@ export const store = createStore({
         },
     },
     mutations: {
-        // Game settings mutations
-        setNumNumbers(state, amount) {
-            state.settings.numNumbers = amount;
-        },
-        setGridNumRows(state, rows) {
-            state.settings.gridNumRows = rows;
-        },
-        setGridNumCols(state, cols) {
-            state.settings.gridNumCols = cols;
-        },
-        setCellsDisappear(state, value) {
-            state.settings.cellsDisappear = value;
+        // data: {key: string, value: any}
+        changeSettings(state, data) {
+            if (!data.key in state.settings) {
+                console.error(`Settings key ${data.key} not found`);
+                return
+            }
+            state.settings[data.key] = data.value;
+            localStorage.setItem(gameSettingsKey, JSON.stringify(state.settings));
         },
 
         // Game state mutations
@@ -146,6 +133,5 @@ export const store = createStore({
             commit('resetGame');
             dispatch('generateGrid');
         },
-    },
-    plugins: [settingsPlugin],
+    }
 });

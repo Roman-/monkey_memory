@@ -1,8 +1,12 @@
 export const defaultSettings = {
+    difficulty: 3,
+    suggestIncreaseDifficulty: true,
     gridNumRows: 6,
     gridNumCols: 5,
     numNumbers: 3,
-    cellsDisappear: false,
+    fontSize: 5, // {fontSize}xl in tailwind
+    cellsDisappearOnClick: false,
+    showGifPictures: false,
 };
 
 export const gameSettingsKey = 'MonkeyMemory-settings'

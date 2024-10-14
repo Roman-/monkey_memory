@@ -42,7 +42,7 @@ watch(
     (newVal) => {
       if (newVal) {
         setTimeout(() => {
-          win.value = store.state.game.currentNumber > store.state.game.numNumbers
+          win.value = store.state.game.currentNumber > store.state.settings.numNumbers
           gameOverModalOpen.value = true
         }, win.value ? 700 : 1200)
       }
