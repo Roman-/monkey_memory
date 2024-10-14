@@ -54,7 +54,9 @@ watch(() => props.open, (newVal) => {
   if (newVal) {
     congratulationMessage.value = randomElement(congratulations)
     modal.value.showModal()
+    console.log("open: store.state.settings.showGifPictures", store.state.settings.showGifPictures);
   } else {
+    console.log("close: store.state.settings.showGifPictures", store.state.settings.showGifPictures);
     modal.value.close()
   }
 })
@@ -64,7 +66,13 @@ watch(() => props.open, (newVal) => {
   <dialog ref="modal" class="modal">
     <form method="dialog" class="modal-box">
       <h3 class="text-lg font-bold">{{ title }}</h3>
-<!--      picture here-->
+
+      <img
+          v-show="store.state.settings.showGifPictures"
+          :src="store.state.game.winImage.src"
+          class="w-full my-2 animate__animated animate__fadeIn animate__faster"
+      />
+
       <div class="modal-action">
         <button
             class="btn btn-neutral btn-outline"

@@ -52,23 +52,10 @@ const goToGame = () => {
         </label>
       </div>
 
-      <!-- Cells Disappear On Click -->
-      <div class="form-control mb-4">
-        <label class="label cursor-pointer">
-          <span class="label-text">Cells Disappear On Click</span>
-          <input
-              type="checkbox"
-              :checked="store.state.settings.cellsDisappearOnClick"
-              @change="changeSetting('cellsDisappearOnClick', $event.target.checked)"
-              class="toggle toggle-primary"
-          />
-        </label>
-      </div>
-
       <!-- Show GIF Pictures -->
       <div class="form-control mb-4">
         <label class="label cursor-pointer">
-          <span class="label-text">Show GIF Pictures</span>
+          <span class="label-text">Show GIF on win</span>
           <input
               type="checkbox"
               :checked="store.state.settings.showGifPictures"
@@ -78,7 +65,7 @@ const goToGame = () => {
         </label>
       </div>
 
-      <!-- Go Button -->
+      <!-- Start game Button -->
       <div class="flex justify-end mt-6">
         <button class="btn btn-lg btn-primary" @click="goToGame">
           Start
@@ -88,7 +75,3 @@ const goToGame = () => {
     </div>
   </div>
 </template>
-
-<style>
-/* Add any additional styling here if needed */
-</style>

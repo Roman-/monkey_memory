@@ -4,8 +4,6 @@ export const defaultSettings = {
     gridNumRows: 6,
     gridNumCols: 5,
     numNumbers: 3,
-    fontSize: 5, // {fontSize}xl in tailwind
-    cellsDisappearOnClick: false,
     showGifPictures: false,
 };
 

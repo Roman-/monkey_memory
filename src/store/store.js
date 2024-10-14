@@ -14,6 +14,7 @@ export const store = createStore({
                 currentNumber: 1,
                 gameOver: false,
                 grid: [],
+                winImage: new Image(),
             },
         };
     },
@@ -51,6 +52,9 @@ export const store = createStore({
             state.game.currentNumber = 1;
             state.game.gameOver = false;
             state.game.grid = [];
+            const imgIndex = Math.floor(Math.random() * 10) + 1
+            state.game.winImage = new Image()
+            state.game.winImage.src = `img/game-over/win${imgIndex}.webp`
         },
     },
     actions: {
