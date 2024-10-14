@@ -11,7 +11,6 @@ export const store = createStore({
             numNumbers: 3,
             currentNumber: 1,
             gameOver: false,
-            message: '',
             grid: [],
         }
     },
@@ -31,9 +30,6 @@ export const store = createStore({
         setGameOver(state, value) {
             state.gameOver = value
         },
-        setMessage(state, msg) {
-            state.message = msg
-        },
         setGrid(state, grid) {
             state.grid = grid
         },
@@ -43,7 +39,6 @@ export const store = createStore({
         resetGameState(state) {
             state.currentNumber = 1
             state.gameOver = false
-            state.message = ''
             state.grid = []
         },
     },
