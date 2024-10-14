@@ -18,6 +18,14 @@ const title = computed(() => {
   return 'Monkey Memory'
 })
 
+const wrenchClicked = () => {
+  if (route.name === 'settings') {
+    router.push('/')
+  } else {
+    router.push('/settings')
+  }
+}
+
 </script>
 
 <template>
@@ -29,7 +37,7 @@ const title = computed(() => {
     </div>
     <div class="flex-none">
 <!--      <LangDropdown/>-->
-      <i class="px-3 bi bi-wrench cursor-pointer" @click="router.push('/settings')"></i>
+      <i class="px-3 bi bi-wrench cursor-pointer" @click="wrenchClicked"></i>
       <ThemeController/>
     </div>
   </div>
