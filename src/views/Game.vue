@@ -16,6 +16,7 @@ const adjustCellSize = () => {
 onMounted(() => {
   window.addEventListener('resize', adjustCellSize)
   adjustCellSize()
+  store.commit('resetGame')
   store.dispatch('generateGrid')
 })
 

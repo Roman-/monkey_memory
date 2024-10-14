@@ -1,6 +1,7 @@
 import { createStore } from 'vuex'
 import { shuffle } from "@/js/helpers";
 import {gameSettingsKey, getInitialSettings} from "@/js/gameSettings";
+import {getWinPictureUrl} from "@/js/winPictures";
 
 export const store = createStore({
     strict: true,
@@ -34,7 +35,6 @@ export const store = createStore({
             localStorage.setItem(gameSettingsKey, JSON.stringify(state.settings));
         },
 
-        // Game state mutations
         setCurrentNumber(state, number) {
             state.game.currentNumber = number;
             state.global.showHint = false;
@@ -52,9 +52,7 @@ export const store = createStore({
             state.game.currentNumber = 1;
             state.game.gameOver = false;
             state.game.grid = [];
-            const imgIndex = Math.floor(Math.random() * 10) + 1
-            state.game.winImage = new Image()
-            state.game.winImage.src = `img/game-over/win${imgIndex}.webp`
+            state.game.winImage.src = getWinPictureUrl()
         },
     },
     actions: {
