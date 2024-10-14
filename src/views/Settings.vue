@@ -52,28 +52,6 @@ const goToGame = () => {
         </label>
       </div>
 
-      <!-- Font Size -->
-      <div class="form-control mb-4">
-        <label class="label">
-          <span class="label-text">Font Size ({{ store.state.settings.fontSize }}xl)</span>
-        </label>
-        <input
-            type="range"
-            min="2"
-            max="6"
-            :value="store.state.settings.fontSize"
-            @input="changeSetting('fontSize', parseInt($event.target.value))"
-            class="range range-primary"
-        />
-        <div class="w-full flex justify-between text-xs px-2">
-          <span>2xl</span>
-          <span>3xl</span>
-          <span>4xl</span>
-          <span>5xl</span>
-          <span>6xl</span>
-        </div>
-      </div>
-
       <!-- Cells Disappear On Click -->
       <div class="form-control mb-4">
         <label class="label cursor-pointer">
