@@ -5,10 +5,16 @@ export const store = createStore({
     strict: true,
     state() {
         return {
+            // global
             showHint: true,
+
+            // game settings
             gridNumRows: 6,
             gridNumCols: 5,
             numNumbers: 3,
+            cellsDisappear: false,
+
+            // game state
             currentNumber: 1,
             gameOver: false,
             grid: [],

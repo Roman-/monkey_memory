@@ -101,7 +101,7 @@ const cellAnimationClass = (cell) => {
   if (cell.isError) {
     return 'animate__animated animate__headShake'
   } else if (cell.isCorrect) {
-    return 'animate__animated animate__flip animate__faster'
+    return 'animate__animated animate__flip animate__faster' // TODO: animate__bounceOut if cellsDisappear
   } else {
     return ''
   }
