@@ -15,19 +15,19 @@ const modal = ref(null)
 
 const congratulations = ["Congratulations!", "You've got it!", "Good job!", "Well done!", "Keep going!", "You're doing great!", "Great job!", "Excellent!", "You rock!", "Awesome!", "Impressive!", "Fantastic!", "Superb!", "Splendid!"]
 const congratulationMessage = ref("")
-const title = computed(() => (props.win ? congratulationMessage : `You've got ${store.state.currentNumber - 1} correct`))
+const title = computed(() => (props.win ? congratulationMessage : `You've got ${store.state.game.currentNumber - 1} correct`))
 
 const secondButtonDisabled = computed(() => {
   if (props.win) {
-    return store.state.numNumbers >= store.getters.totalCells
+    return store.state.settings.numNumbers >= store.getters.totalCells
   } else {
-    return store.state.numNumbers <= 1
+    return store.state.settings.numNumbers <= 1
   }
 })
 
 const firstButtonAction = () => {
   if (!props.win) {
-    store.commit('setNumNumbers', store.state.numNumbers - 1)
+    store.commit('setNumNumbers', store.state.settings.numNumbers - 1)
   }
   store.dispatch('resetGame')
   closeModal()
@@ -35,8 +35,8 @@ const firstButtonAction = () => {
 
 const secondButtonAction = () => {
   if (props.win) {
-    if (store.state.numNumbers < store.getters.totalCells) {
-      store.commit('setNumNumbers', store.state.numNumbers + 1)
+    if (store.state.settings.numNumbers < store.getters.totalCells) {
+      store.commit('setNumNumbers', store.state.settings.numNumbers + 1)
     } else {
       // todo increase grid size, update size
     }
@@ -70,7 +70,7 @@ watch(() => props.open, (newVal) => {
             class="btn btn-neutral btn-outline"
             @click.prevent="firstButtonAction"
         >
-          {{ props.win ? `Try ${store.state.numNumbers} again` : `Easier: ${store.state.numNumbers - 1}` }}
+          {{ props.win ? `Try ${store.state.settings.numNumbers} again` : `Easier: ${store.state.settings.numNumbers - 1}` }}
         </button>
         <button
             class="btn btn-primary"
@@ -78,7 +78,7 @@ watch(() => props.open, (newVal) => {
             :disabled="secondButtonDisabled"
             autofocus
         >
-          {{ props.win ? `Next: ${store.state.numNumbers + 1}` : `Try ${store.state.numNumbers} again` }}
+          {{ props.win ? `Next: ${store.state.settings.numNumbers + 1}` : `Try ${store.state.settings.numNumbers} again` }}
         </button>
       </div>
     </form>

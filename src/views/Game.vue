@@ -10,7 +10,7 @@ const cellSizePx = ref(0) // Cell size in pixels
 
 const adjustCellSize = () => {
   // todo: 40 is hardcoded
-  cellSizePx.value = Math.floor(Math.min(window.innerWidth / store.state.gridNumCols, (window.innerHeight - 40) / store.state.gridNumRows) * 0.9)
+  cellSizePx.value = Math.floor(Math.min(window.innerWidth / store.state.settings.gridNumCols, (window.innerHeight - 40) / store.state.settings.gridNumRows) * 0.9)
 }
 
 onMounted(() => {
@@ -28,21 +28,21 @@ const gameOverModalOpen = ref(false)
 const win = ref(false)
 
 const handleCellClick = (cell, event) => {
-  if (store.state.gameOver || !cell.hasNumber) {
+  if (store.state.settings.gameOver || !cell.hasNumber) {
     return
   }
   store.dispatch('handleCellClick', cell)
-  if (cell.number === store.state.numNumbers && store.state.gameOver && cell.number <= store.state.currentNumber) {
+  if (cell.number === store.state.game.numNumbers && store.state.game.gameOver && cell.number <= store.state.game.currentNumber) {
     party.confetti(event.target)
   }
 }
 
 watch(
-    () => store.state.gameOver,
+    () => store.state.game.gameOver,
     (newVal) => {
       if (newVal) {
         setTimeout(() => {
-          win.value = store.state.currentNumber > store.state.numNumbers
+          win.value = store.state.game.currentNumber > store.state.game.numNumbers
           gameOverModalOpen.value = true
         }, win.value ? 700 : 1200)
       }
@@ -59,10 +59,10 @@ const closeModal = () => {
     <div class="flex flex-col items-center my-4">
       <div
           class="grid gap-2 m-0 p-0"
-          :style="{ gridTemplateColumns: 'repeat(' + store.state.gridNumCols + ', ' + cellSizePx + 'px)' }"
+          :style="{ gridTemplateColumns: 'repeat(' + store.state.settings.gridNumCols + ', ' + cellSizePx + 'px)' }"
       >
         <div
-            v-for="cell in store.state.grid"
+            v-for="cell in store.state.game.grid"
             :key="cell.id"
             @touchstart.prevent.stop="handleCellClick(cell, $event)"
             @mousedown.prevent.stop="handleCellClick(cell, $event)"
