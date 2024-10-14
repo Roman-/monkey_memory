@@ -67,7 +67,7 @@ const closeModal = () => {
             @touchstart.prevent.stop="handleCellClick(cell, $event)"
             @mousedown.prevent.stop="handleCellClick(cell, $event)"
             class="flex items-center justify-center text-5xl font-bold rounded select-none"
-            :class="[cellBgClass(cell), cellAnimationClass(cell), cellVisibilityClass(cell)]"
+            :class="[cellBgClass(cell), cellAnimationClass(cell), cellVisibilityClass(cell), cellFontClass]"
             :style="{ width: cellSizePx + 'px', height: cellSizePx + 'px' }"
         >
           <span v-if="cell.isRevealed && cell.hasNumber">{{ cell.number }}</span>
@@ -79,6 +79,9 @@ const closeModal = () => {
 </template>
 
 <script>
+import {store} from "@/store/store";
+import {computed} from "vue";
+
 const cellBgClass = (cell) => {
   if (cell.isError) {
     return 'bg-error text-error-content'
@@ -96,6 +99,8 @@ const cellBgClass = (cell) => {
 const cellVisibilityClass = (cell) => {
   return cell.hasNumber ? 'border cursor-pointer shadow-md' : 'border'
 }
+
+const cellFontClass = computed(() => ``) // `text-${store.state.settings.fontSize}xl`
 
 const cellAnimationClass = (cell) => {
   if (cell.isError) {
