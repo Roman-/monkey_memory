@@ -16,6 +16,8 @@ export const store = createStore({
                 gameOver: false,
                 grid: [],
                 winImage: new Image(),
+                finalImage: new Image(),
+                gamesPlayed: 0,
             },
         };
     },
@@ -41,6 +43,9 @@ export const store = createStore({
         },
         setGameOver(state, value) {
             state.game.gameOver = value;
+            if (value) {
+                state.game.gamesPlayed += 1;
+            }
         },
         setGrid(state, grid) {
             state.game.grid = grid;
@@ -52,8 +57,13 @@ export const store = createStore({
             state.game.currentNumber = 1;
             state.game.gameOver = false;
             state.game.grid = [];
-            state.game.winImage.src = getWinPictureUrl()
+            state.game.winImage.src = getWinPictureUrl();
+            state.game.finalImage.src = "img/game-over/the_end.webp"
+            if (state.game.gamesPlayed >= state.settings.numGames && state.settings.numGames > 0) {
+                state.game.gamesPlayed = 0; // Reset gamesPlayed when all games are completed
+            }
         },
+
     },
     actions: {
         generateGrid({ state, commit, getters }) {

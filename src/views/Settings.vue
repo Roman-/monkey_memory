@@ -65,6 +65,22 @@ const goToGame = () => {
         </label>
       </div>
 
+      <!-- Number of Games -->
+      <div class="form-control mb-4">
+        <label class="label">
+          <span class="label-text">Number of Games</span>
+        </label>
+        <select
+            :value="store.state.settings.numGames"
+            @change="changeSetting('numGames', parseInt($event.target.value))"
+            class="select select-bordered w-full"
+        >
+          <option :value="0">Unlimited</option>
+          <option v-for="n in [1, 3, 5, 7, 10]" :key="n" :value="n">
+            {{ n }}
+          </option>
+        </select>
+      </div>
       <!-- Start game Button -->
       <div class="flex justify-end mt-6">
         <button class="btn btn-lg btn-primary" @click="goToGame">

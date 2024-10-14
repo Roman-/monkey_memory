@@ -4,6 +4,7 @@ export const defaultSettings = {
     gridNumRows: 6,
     gridNumCols: 5,
     numNumbers: 3,
+    numGames: 0, // 0 means unlimited
     showGifPictures: false,
 };
 
