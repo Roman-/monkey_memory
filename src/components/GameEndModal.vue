@@ -9,6 +9,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['close'])
+const imageSrc = ref("")
 
 const store = useStore()
 const modal = ref(null)
@@ -25,12 +26,16 @@ const secondButtonDisabled = computed(() => {
   }
 })
 
+const resetGameAndClose = () => {
+  store.dispatch('resetGame')
+  closeModal()
+}
+
 const firstButtonAction = () => {
   if (!props.win) {
     store.commit('changeSettings', { key: 'numNumbers', value: store.state.settings.numNumbers - 1 })
   }
-  store.dispatch('resetGame')
-  closeModal()
+  resetGameAndClose()
 }
 
 const secondButtonAction = () => {
@@ -41,8 +46,7 @@ const secondButtonAction = () => {
       // todo increase grid size, update size
     }
   }
-  store.dispatch('resetGame')
-  closeModal()
+  resetGameAndClose()
 }
 
 const closeModal = () => {
@@ -53,6 +57,8 @@ const closeModal = () => {
 watch(() => props.open, (newVal) => {
   if (newVal) {
     congratulationMessage.value = randomElement(congratulations)
+    // Don't bind to winImage directly because when dialog is closed, image is changed, and you can see the new image
+    imageSrc.value = store.state.game.winImage.src
     modal.value.showModal()
   } else {
     modal.value.close()
@@ -67,26 +73,44 @@ watch(() => props.open, (newVal) => {
 
       <img
           v-show="store.state.settings.showGifPictures && props.win"
-          :src="store.state.game.winImage.src"
+          :src="imageSrc"
           class="w-full my-2 animate__animated animate__fadeIn animate__faster"
       />
 
-      <div class="modal-action">
-        <button
-            class="btn btn-neutral btn-outline"
-            @click.prevent="firstButtonAction"
-        >
-          {{ props.win ? `Try ${store.state.settings.numNumbers} again` : `Easier: ${store.state.settings.numNumbers - 1}` }}
-        </button>
-        <button
-            class="btn btn-primary"
-            @click.prevent="secondButtonAction"
-            :disabled="secondButtonDisabled"
-            autofocus
-        >
-          {{ props.win ? `Next: ${store.state.settings.numNumbers + 1}` : `Try ${store.state.settings.numNumbers} again` }}
-        </button>
+      <!-- two buttons-->
+      <div v-if="store.state.settings.suggestIncreaseDifficulty">
+        <div class="modal-action">
+          <button
+              class="btn btn-neutral btn-outline"
+              @click.prevent="firstButtonAction"
+          >
+            {{ props.win ? `Try ${store.state.settings.numNumbers} again` : `Easier: ${store.state.settings.numNumbers - 1}` }}
+          </button>
+          <button
+              class="btn btn-primary"
+              @click.prevent="secondButtonAction"
+              :disabled="secondButtonDisabled"
+              autofocus
+          >
+            {{ props.win ? `Next: ${store.state.settings.numNumbers + 1}` : `Try ${store.state.settings.numNumbers} again` }}
+          </button>
+        </div>
       </div>
+
+      <!-- single button-->
+      <div v-else>
+        <div class="modal-action">
+          <button
+              class="btn btn-primary"
+              @click.prevent="resetGameAndClose"
+              :disabled="secondButtonDisabled"
+              autofocus
+          >
+            Play again
+          </button>
+        </div>
+      </div>
+
     </form>
   </dialog>
 </template>
