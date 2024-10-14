@@ -66,7 +66,7 @@ watch(() => props.open, (newVal) => {
       <h3 class="text-lg font-bold">{{ title }}</h3>
 
       <img
-          v-show="store.state.settings.showGifPictures"
+          v-show="store.state.settings.showGifPictures && props.win"
           :src="store.state.game.winImage.src"
           class="w-full my-2 animate__animated animate__fadeIn animate__faster"
       />
