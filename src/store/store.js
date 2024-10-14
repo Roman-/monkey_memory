@@ -97,13 +97,10 @@ export const store = createStore({
                 commit('setCurrentNumber', state.currentNumber + 1)
 
                 if (state.currentNumber > state.numNumbers) {
-                    commit('setMessage', 'Congratulations! You completed the game.')
                     commit('setGameOver', true)
                 }
             } else {
-                // Wrong cell clicked
-                commit('setMessage', `Wrong cell! You should click on number ${state.currentNumber}.`)
-                commit('setGameOver', true)
+                commit('setGameOver', true) // Wrong cell clicked
 
                 // Reveal only cells with numbers
                 state.grid.forEach((c, index) => {
