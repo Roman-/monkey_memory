@@ -75,7 +75,7 @@ const gamesLeftMsg = computed(() => {
     return "No games left";
   }
   if (store.state.game.totalGamesPlayed === store.state.settings.numGames - 1) {
-    return "Last game left";
+    return "Last game";
   }
   return (store.state.settings.numGames -  store.state.game.totalGamesPlayed) + " games left"
 })
@@ -84,12 +84,12 @@ const gamesLeftMsg = computed(() => {
 <template>
   <dialog ref="modal" class="modal">
     <form method="dialog" class="modal-box">
-      <h3 class="text-lg">
-        <span class="font-bold">{{ title }}</span>
-        <span v-if="store.state.settings.numGames !== 0" class="ml-2 text-neutral text-sm">
+      <div class="flex justify-between">
+        <h3 class="text-lg font-bold">{{ title }}</h3>
+        <span class="ml-2 text-neutral text-sm">
           {{gamesLeftMsg}}
         </span>
-      </h3>
+      </div>
 
       <img
           v-show="store.state.settings.showGifPictures && props.win"
