@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
-import { useStore } from 'vuex'
 import {randomElement} from "@/js/helpers";
+import {store} from "@/store/store";
 
 const props = defineProps({
   open: Boolean,
@@ -12,9 +12,8 @@ const emit = defineEmits(['close'])
 const imageSrc = ref("")
 
 const isFinalGame = computed(() =>
-    store.state.settings.numGames > 0 && store.state.game.gamesPlayed >= store.state.settings.numGames );
+    store.state.settings.numGames > 0 && store.state.game.totalGamesPlayed >= store.state.settings.numGames );
 
-const store = useStore()
 const modal = ref(null)
 
 const congratulations = ["Congratulations!", "You've got it!", "Good job!", "Well done!", "Keep going!", "You're doing great!", "Great job!", "Excellent!", "You rock!", "Awesome!", "Impressive!", "Fantastic!", "Superb!", "Splendid!"]
@@ -67,12 +66,30 @@ watch(() => props.open, (newVal) => {
     modal.value.close()
   }
 })
+
+const gamesLeftMsg = computed(() => {
+  if (store.state.settings.numGames === 0) {
+    return ""
+  }
+  if (store.state.game.totalGamesPlayed === store.state.settings.numGames) {
+    return "No games left";
+  }
+  if (store.state.game.totalGamesPlayed === store.state.settings.numGames - 1) {
+    return "Last game left";
+  }
+  return (store.state.settings.numGames -  store.state.game.totalGamesPlayed) + " games left"
+})
 </script>
 
 <template>
   <dialog ref="modal" class="modal">
     <form method="dialog" class="modal-box">
-      <h3 class="text-lg font-bold">{{ title }}</h3>
+      <h3 class="text-lg">
+        <span class="font-bold">{{ title }}</span>
+        <span v-if="store.state.settings.numGames !== 0" class="ml-2 text-neutral text-sm">
+          {{gamesLeftMsg}}
+        </span>
+      </h3>
 
       <img
           v-show="store.state.settings.showGifPictures && props.win"
