@@ -16,7 +16,6 @@ export const store = createStore({
                 gameOver: false,
                 grid: [],
                 winImage: new Image(),
-                finalImage: new Image(),
                 totalGamesPlayed: 0,
             },
         };
@@ -58,7 +57,6 @@ export const store = createStore({
             state.game.gameOver = false;
             state.game.grid = [];
             state.game.winImage.src = getWinPictureUrl();
-            state.game.finalImage.src = "img/game-over/the_end.webp"
             if (state.game.totalGamesPlayed >= state.settings.numGames && state.settings.numGames > 0) {
                 state.game.totalGamesPlayed = 0; // Reset gamesPlayed when all games are completed
             }

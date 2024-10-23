@@ -60,7 +60,7 @@ watch(() => props.open, (newVal) => {
   if (newVal) {
     congratulationMessage.value = randomElement(congratulations)
     // Don't bind to winImage directly because when dialog is closed, image is changed, and you can see the new image
-    imageSrc.value = isFinalGame.value ? store.state.game.finalImage.src : store.state.game.winImage.src
+    imageSrc.value = store.state.game.winImage.src
     modal.value.showModal()
   } else {
     modal.value.close()
