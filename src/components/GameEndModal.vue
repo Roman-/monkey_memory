@@ -10,6 +10,7 @@ const props = defineProps({
 
 const emit = defineEmits(['close'])
 const imageSrc = ref("")
+const isPenaltyWaining = ref(false);
 
 const isFinalGame = computed(() =>
     store.state.settings.numGames > 0 && store.state.game.totalGamesPlayed >= store.state.settings.numGames );
@@ -61,6 +62,14 @@ watch(() => props.open, (newVal) => {
     congratulationMessage.value = randomElement(congratulations)
     // Don't bind to winImage directly because when dialog is closed, image is changed, and you can see the new image
     imageSrc.value = store.state.game.winImage.src
+    if (props.win || store.state.settings.loosePenaltySec === 0) {
+      isPenaltyWaining.value = false
+    } else {
+      isPenaltyWaining.value = true
+      setTimeout(() => {
+        isPenaltyWaining.value = false
+      }, store.state.settings.loosePenaltySec * 1000)
+    }
     modal.value.showModal()
   } else {
     modal.value.close()
@@ -101,13 +110,17 @@ const gamesLeftMsg = computed(() => {
         Reload page to play again. You can disable this in the settings (number of games).
       </div>
       <div v-else>
+        <div v-if="store.state.settings.loosePenaltySec !== 0 && !props.win" class="text-neutral text-sm mt-2">
+          Waiting {{ store.state.settings.loosePenaltySec }} seconds to play again. You can disable this in the settings.
+          <span v-if="isPenaltyWaining" class="loading loading-bars loading-xs px-2"/>
+        </div>
         <!-- single button-->
         <div v-if="store.state.settings.fixedDifficulty">
           <div class="modal-action">
             <button
                 class="btn btn-primary"
                 @click.prevent="resetGameAndClose"
-                :disabled="secondButtonDisabled"
+                :disabled="secondButtonDisabled || isPenaltyWaining"
                 autofocus
             >
               Play again
@@ -121,13 +134,14 @@ const gamesLeftMsg = computed(() => {
             <button
                 class="btn btn-neutral btn-outline"
                 @click.prevent="firstButtonAction"
+                :disabled="isPenaltyWaining"
             >
               {{ props.win ? `Try ${store.state.settings.numNumbers} again` : `Easier: ${store.state.settings.numNumbers - 1}` }}
             </button>
             <button
                 class="btn btn-primary"
                 @click.prevent="secondButtonAction"
-                :disabled="secondButtonDisabled"
+                :disabled="secondButtonDisabled || isPenaltyWaining"
                 autofocus
             >
               {{ props.win ? `Next: ${store.state.settings.numNumbers + 1}` : `Try ${store.state.settings.numNumbers} again` }}

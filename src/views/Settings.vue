@@ -81,6 +81,24 @@ const goToGame = () => {
           </option>
         </select>
       </div>
+
+      <!-- Loose Penalty -->
+      <div class="form-control mb-4">
+        <label class="label">
+          <span class="label-text">Penalty for loosing</span>
+        </label>
+        <select
+            :value="store.state.settings.loosePenaltySec"
+            @change="changeSetting('loosePenaltySec', parseInt($event.target.value))"
+            class="select select-bordered w-full"
+        >
+          <option :value="0">No penalty</option>
+          <option v-for="n in [3, 5, 7, 10, 15]" :key="n" :value="n">
+            {{ n }} seconds waiting
+          </option>
+        </select>
+      </div>
+
       <!-- Start game Button -->
       <div class="flex justify-end mt-6">
         <button class="btn btn-lg btn-primary" @click="goToGame">
