@@ -33,33 +33,8 @@ export const randomElement = (array) => {
     return array[Math.floor(Math.random() * array.length)];
 }
 
-// converts file size in bytes to human-readable string
-function humanFileSize(bytes, si = true) {
-    let thresh = si ? 1000 : 1024;
-    if(Math.abs(bytes) < thresh) {
-        return bytes + ' B';
-    }
-    let units = si
-        ? ['kB','MB','GB','TB','PB','EB','ZB','YB']
-        : ['KiB','MiB','GiB','TiB','PiB','EiB','ZiB','YiB'];
-    let u = -1;
-    do {
-        bytes /= thresh;
-        ++u;
-    } while(Math.abs(bytes) >= thresh && u < units.length - 1);
-    return bytes.toFixed(1)+' '+units[u];
-}
-
 // @returns current date in format DDMMYYYY
 function getCurrentDateString() {
     let t = (new Date());
     return '' + t.getDate() + '-' + t.getMonth() + '-' + t.getFullYear();
-}
-
-// @returns name of the file from full path
-// @param path - path to file
-function filenameFromPath(path) {
-    let parts = path.split(/[\/\\\.]/);
-    // return a thing second to last
-    return (parts.length > 1) ? parts[parts.length - 2] : parts[0];
 }
