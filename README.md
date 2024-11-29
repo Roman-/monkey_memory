@@ -1,4 +1,4 @@
-# Monkey Memory https://bestsiteever.ru/monkey
+# Monkey Memory https://bestsiteever.net/monkey
 
 ![demo](demo.gif)
 
